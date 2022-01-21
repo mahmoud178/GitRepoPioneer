@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.ArrayAdapter
 import android.widget.SpinnerAdapter
+import android.widget.TextView
 
 
 class DisplayActivity : AppCompatActivity(), View.OnClickListener,
@@ -91,6 +92,12 @@ class DisplayActivity : AppCompatActivity(), View.OnClickListener,
             })
     }
 
+    private fun resetViews() {
+        programmingLang = ""
+        itemsCountEdit.setText("", TextView.BufferType.EDITABLE)
+        selectedLangTxt.text = programmingLang
+    }
+
     private fun provideData(list: List<Item>) {
         adapter = GitAdapter(this, list)
         displayRecycler.layoutManager =
@@ -147,15 +154,16 @@ class DisplayActivity : AppCompatActivity(), View.OnClickListener,
                 this.makeToast("Viewed Items Can not Be Empty")
             }
             else -> {
-                if (programmingLang.isNotEmpty()) {
-                    programmingLang = ":$programmingLang"
+                programmingLang = if (programmingLang.isNotEmpty()) {
+                    "language:$programmingLang"
+                } else {
+                    "language"
                 }
-
                 getData(
                     "created:>${updateView(myCalendar.time)}",
-                    itemsCountEdit.text.toString(), "language$programmingLang"
+                    itemsCountEdit.text.toString(), programmingLang
                 )
-
+                resetViews()
             }
         }
 
@@ -168,11 +176,13 @@ class DisplayActivity : AppCompatActivity(), View.OnClickListener,
         } else {
             programmingLangItems[p2]
         }
-        selectedLangTxt.text=programmingLang
+        selectedLangTxt.text = programmingLang
+
 
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
+
     }
 
 }
